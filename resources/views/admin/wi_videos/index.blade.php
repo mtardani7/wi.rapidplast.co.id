@@ -154,7 +154,7 @@
                         <form method="POST" action="{{ route('admin.wi.videos.store', $wi->id) }}" enctype="multipart/form-data">
                             @csrf
                             <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 border-b border-red-500">
-                                <h3 class="text-lg font-bold text-white">Upload Video MP4</h3>
+                                <h3 class="text-lg font-bold text-white">Upload Video</h3>
                             </div>
                             
                             <div class="px-6 py-6 space-y-4">
@@ -174,16 +174,56 @@
                                     <textarea name="description" rows="2" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200"></textarea>
                                 </div>
 
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">File MP4</label>
-                                    <input type="file" name="video_file" accept="video/mp4" class="block w-full text-sm text-gray-500
-                                      file:mr-4 file:py-2 file:px-4
-                                      file:rounded-full file:border-0
-                                      file:text-sm file:font-semibold
-                                      file:bg-red-50 file:text-red-700
-                                      hover:file:bg-red-100
-                                    " required>
-                                    <p class="mt-1 text-xs text-gray-500">Maksimal 500MB (MP4 Only).</p>
+                                <div x-data="{ sourceType: 'upload' }">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sumber Video</label>
+                                    <div class="grid grid-cols-2 gap-2 mb-4">
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'upload' }">
+                                            <input type="radio" name="video_source_type" value="upload" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Upload File</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'youtube' }">
+                                            <input type="radio" name="video_source_type" value="youtube" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">YouTube</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'vimeo' }">
+                                            <input type="radio" name="video_source_type" value="vimeo" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Vimeo</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'cdn' }">
+                                            <input type="radio" name="video_source_type" value="cdn" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">CDN/Link</span>
+                                        </label>
+                                    </div>
+
+                                    <div x-show="sourceType === 'upload'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">File MP4</label>
+                                        <input type="file" name="video_file" accept="video/mp4" class="block w-full text-sm text-gray-500
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-full file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-red-50 file:text-red-700
+                                          hover:file:bg-red-100
+                                        ">
+                                        <p class="text-xs text-gray-500">Maksimal 500MB (MP4 Only).</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'youtube'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">YouTube URL</label>
+                                        <input type="url" name="video_url" placeholder="https://www.youtube.com/watch?v=..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ atau https://youtu.be/dQw4w9WgXcQ</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'vimeo'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Vimeo URL</label>
+                                        <input type="url" name="video_url" placeholder="https://vimeo.com/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://vimeo.com/123456789</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'cdn'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">CDN atau Link Video</label>
+                                        <input type="url" name="video_url" placeholder="https://cdn.example.com/video.mp4" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://cdn.example.com/video.mp4 atau link langsung ke file video</p>
+                                    </div>
                                 </div>
 
                                 <div class="flex items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
@@ -233,6 +273,57 @@
                                     <textarea name="description" x-model="editForm.description" rows="2" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200"></textarea>
                                 </div>
 
+                                <div x-data="{ sourceType: editForm.video_source_type || 'upload' }">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sumber Video</label>
+                                    <div class="grid grid-cols-2 gap-2 mb-4">
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'upload' }">
+                                            <input type="radio" name="video_source_type" value="upload" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Upload File</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'youtube' }">
+                                            <input type="radio" name="video_source_type" value="youtube" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">YouTube</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'vimeo' }">
+                                            <input type="radio" name="video_source_type" value="vimeo" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Vimeo</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'cdn' }">
+                                            <input type="radio" name="video_source_type" value="cdn" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">CDN/Link</span>
+                                        </label>
+                                    </div>
+
+                                    <div x-show="sourceType === 'upload'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Ganti File MP4 (Opsional)</label>
+                                        <input type="file" name="video_file" accept="video/mp4" class="block w-full text-sm text-gray-500
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-full file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-yellow-100 file:text-yellow-700
+                                          hover:file:bg-yellow-200
+                                        ">
+                                        <p class="text-xs text-gray-500">Biarkan kosong untuk tidak mengganti file.</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'youtube'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">YouTube URL</label>
+                                        <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://www.youtube.com/watch?v=..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'vimeo'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Vimeo URL</label>
+                                        <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://vimeo.com/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://vimeo.com/123456789</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'cdn'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">CDN atau Link Video</label>
+                                        <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://cdn.example.com/video.mp4" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://cdn.example.com/video.mp4</p>
+                                    </div>
+                                </div>
                                 <div class="bg-yellow-50 p-3 rounded-xl border border-yellow-100">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Ganti File MP4 (Opsional)</label>
                                     <input type="file" name="video_file" accept="video/mp4" class="block w-full text-sm text-gray-500
@@ -274,6 +365,8 @@ function videoManager() {
             title: '',
             sort_order: 1,
             description: '',
+            video_source_type: 'upload',
+            video_url: '',
             is_active: true
         },
 
@@ -287,6 +380,8 @@ function videoManager() {
                 title: data.title,
                 sort_order: data.sort_order,
                 description: data.description || '',
+                video_source_type: data.video_source_type || 'upload',
+                video_url: data.video_url || '',
                 is_active: !!data.is_active
             };
             this.editModalOpen = true;

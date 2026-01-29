@@ -27,15 +27,11 @@ class WorkInstructionController extends Controller
         return view('participant.wi.index', compact('wis', 'progressMap'));
     }
 
-    // ✅ TAMBAH INI
     public function playVideo(WiVideo $video)
     {
-        // optional: hanya boleh play video yang aktif
         if (!$video->is_active) {
             abort(404);
         }
-
-        // ambil progress peserta (kalau ada)
         $participantId = session('participant_id');
 
         $progress = ParticipantVideoProgress::where('participant_id', $participantId)

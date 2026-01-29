@@ -18,24 +18,46 @@ class WiVideoAdminController extends Controller
 
     public function store(Request $request, WorkInstruction $wi)
     {
-        $request->validate([
+        $videoSourceType = $request->input('video_source_type', 'upload');
+
+        $rules = [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'sort_order' => ['required', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
+            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn'],
+        ];
 
-            // WAJIB UPLOAD MP4
-            'video_file' => ['required', 'file', 'mimes:mp4', 'max:512000'], // 500MB
-        ]);
+        // Validasi berbeda berdasarkan source type
+        if ($videoSourceType === 'upload') {
+            $rules['video_file'] = ['required', 'file', 'mimes:mp4', 'max:512000'];
+        } elseif ($videoSourceType === 'youtube') {
+            $rules['video_url'] = ['required', 'url', 'regex:/youtube\.com|youtu\.be/'];
+        } elseif ($videoSourceType === 'vimeo') {
+            $rules['video_url'] = ['required', 'url', 'regex:/vimeo\.com/'];
+        } elseif ($videoSourceType === 'cdn') {
+            $rules['video_url'] = ['required', 'url'];
+        }
 
-        $path = $request->file('video_file')->store('wi_videos', 'public');
-        $videoUrl = asset('storage/' . $path);
+        $request->validate($rules);
+
+        $videoUrl = null;
+        $embedCode = null;
+
+        if ($videoSourceType === 'upload') {
+            $path = $request->file('video_file')->store('wi_videos', 'public');
+            $videoUrl = asset('storage/' . $path);
+        } else {
+            $videoUrl = $request->input('video_url');
+        }
 
         WiVideo::create([
             'work_instruction_id' => $wi->id,
             'title' => $request->title,
             'description' => $request->description,
             'video_url' => $videoUrl,
+            'video_source_type' => $videoSourceType,
+            'embed_code' => $embedCode,
             'duration_seconds' => null,
             'sort_order' => $request->sort_order,
             'is_active' => $request->boolean('is_active'),
@@ -48,33 +70,56 @@ class WiVideoAdminController extends Controller
     {
         abort_if($video->work_instruction_id !== $wi->id, 404);
 
-        $request->validate([
+        $videoSourceType = $request->input('video_source_type', $video->video_source_type);
+
+        $rules = [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'sort_order' => ['required', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
+            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn'],
+        ];
 
-            // optional kalau mau replace file
-            'video_file' => ['nullable', 'file', 'mimes:mp4', 'max:512000'],
-        ]);
-
-        // kalau upload file baru -> hapus lama
-        if ($request->hasFile('video_file')) {
-
-            // hapus file lama kalau berasal dari storage
-            if ($video->video_url && str_contains($video->video_url, '/storage/')) {
-                $relative = str_replace(asset('storage') . '/', '', $video->video_url);
-                Storage::disk('public')->delete($relative);
-            }
-
-            $path = $request->file('video_file')->store('wi_videos', 'public');
-            $video->video_url = asset('storage/' . $path);
+        // Validasi berbeda berdasarkan source type
+        if ($videoSourceType === 'upload') {
+            $rules['video_file'] = ['nullable', 'file', 'mimes:mp4', 'max:512000'];
+        } elseif ($videoSourceType === 'youtube') {
+            $rules['video_url'] = ['required', 'url', 'regex:/youtube\.com|youtu\.be/'];
+        } elseif ($videoSourceType === 'vimeo') {
+            $rules['video_url'] = ['required', 'url', 'regex:/vimeo\.com/'];
+        } elseif ($videoSourceType === 'cdn') {
+            $rules['video_url'] = ['required', 'url'];
         }
+
+        $request->validate($rules);
 
         $video->title = $request->title;
         $video->description = $request->description;
         $video->sort_order = $request->sort_order;
         $video->is_active = $request->boolean('is_active');
+        $video->video_source_type = $videoSourceType;
+
+        if ($videoSourceType === 'upload') {
+            if ($request->hasFile('video_file')) {
+                // Hapus file lama jika ada
+                if ($video->video_url && str_contains($video->video_url, '/storage/')) {
+                    $relative = str_replace(asset('storage') . '/', '', $video->video_url);
+                    Storage::disk('public')->delete($relative);
+                }
+
+                $path = $request->file('video_file')->store('wi_videos', 'public');
+                $video->video_url = asset('storage/' . $path);
+            }
+        } else {
+            // Untuk external video (youtube, vimeo, cdn)
+            $video->video_url = $request->input('video_url');
+            // Hapus file upload lama jika ada
+            if ($video->video_url && str_contains($video->video_url, '/storage/')) {
+                $relative = str_replace(asset('storage') . '/', '', $video->video_url);
+                Storage::disk('public')->delete($relative);
+            }
+        }
+
         $video->save();
 
         return back()->with('success', 'Video berhasil diupdate.');

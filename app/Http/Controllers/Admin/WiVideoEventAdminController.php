@@ -79,13 +79,11 @@ class WiVideoEventAdminController extends Controller
         $request->validate([
             'minute' => ['required', 'integer', 'min:0'],
             'second' => ['required', 'integer', 'min:0', 'max:59'],
-
             'question' => ['required', 'string', 'max:255'],
             'option_a' => ['required', 'string', 'max:255'],
             'option_b' => ['required', 'string', 'max:255'],
             'option_c' => ['required', 'string', 'max:255'],
             'option_d' => ['required', 'string', 'max:255'],
-
             'correct_index' => ['required', 'integer', 'min:0', 'max:3'],
             'explanation' => ['nullable', 'string'],
             'is_required' => ['nullable', 'boolean'],

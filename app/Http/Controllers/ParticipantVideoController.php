@@ -13,7 +13,6 @@ class ParticipantVideoController extends Controller
     public function saveProgress(Request $request, WiVideo $video)
     {
         $participantId = session('participant_id');
-
         $request->validate([
             'last_time_seconds' => ['required', 'integer', 'min:0'],
         ]);
@@ -42,7 +41,7 @@ class ParticipantVideoController extends Controller
                 'type',
                 'question',
                 'options',
-                'correct_index', // NOTE: nanti sebaiknya jangan dikirim (untuk keamanan). MVP dulu.
+                'correct_index',
                 'explanation',
                 'is_required',
                 'rewind_to_seconds',

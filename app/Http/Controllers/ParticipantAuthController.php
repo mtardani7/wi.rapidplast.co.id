@@ -22,7 +22,6 @@ class ParticipantAuthController extends Controller
 
         $participant = Participant::where('nik', $nik)->first();
 
-        // kalau NIK sudah ada => langsung lanjut
         if ($participant) {
             session([
                 'participant_id' => $participant->id,
@@ -32,7 +31,6 @@ class ParticipantAuthController extends Controller
             return redirect()->route('wi.index');
         }
 
-        // kalau belum ada => simpan nik sementara untuk register
         session([
             'pending_nik' => $nik,
         ]);
@@ -42,7 +40,6 @@ class ParticipantAuthController extends Controller
 
     public function showRegisterForm()
     {
-        // kalau pending_nik tidak ada, balik ke form nik
         if (!session('pending_nik')) {
             return redirect()->route('nik.form');
         }
@@ -70,7 +67,6 @@ class ParticipantAuthController extends Controller
 
         $nik = session('pending_nik');
 
-        // safety: kalau ternyata nik sudah dibuat dari tab lain
         $participant = Participant::firstOrCreate(
             ['nik' => $nik],
             [
@@ -79,14 +75,11 @@ class ParticipantAuthController extends Controller
             ]
         );
 
-        // kalau participant sudah ada tapi name/plan kosong (optional)
         if (!$participant->name) {
             $participant->name = $request->name;
             $participant->plan = $request->plan;
             $participant->save();
         }
-
-        // login participant via session
         session()->forget('pending_nik');
         session([
             'participant_id' => $participant->id,

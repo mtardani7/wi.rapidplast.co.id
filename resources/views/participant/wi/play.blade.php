@@ -27,16 +27,40 @@
     {{-- Video --}}
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
       <div class="p-6">
-        <video 
-          id="wiVideo" 
-          controls 
-          playsinline 
-          preload="metadata"
-          class="w-full rounded-lg"
-        >
-          <source src="{{ $video->video_url }}" type="video/mp4">
-          Browser kamu tidak support video.
-        </video>
+        @if($video->video_source_type === 'youtube')
+          <iframe 
+            id="wiVideo" 
+            width="100%" 
+            height="500" 
+            src="https://www.youtube.com/embed/{{ $video->extractYoutubeId($video->video_url) }}" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen 
+            class="rounded-lg"
+          ></iframe>
+        @elseif($video->video_source_type === 'vimeo')
+          <iframe 
+            id="wiVideo" 
+            src="https://player.vimeo.com/video/{{ $video->extractVimeoId($video->video_url) }}" 
+            width="100%" 
+            height="500" 
+            frameborder="0" 
+            allow="autoplay; fullscreen; picture-in-picture" 
+            allowfullscreen 
+            class="rounded-lg"
+          ></iframe>
+        @else
+          <video 
+            id="wiVideo" 
+            controls 
+            playsinline 
+            preload="metadata"
+            class="w-full rounded-lg"
+          >
+            <source src="{{ $video->video_url }}" type="video/mp4">
+            Browser kamu tidak support video.
+          </video>
+        @endif
 
         {{-- Score --}}
         <div class="mt-6">

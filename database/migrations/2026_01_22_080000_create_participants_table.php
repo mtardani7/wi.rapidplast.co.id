@@ -11,11 +11,7 @@ return new class extends Migration {
             $table->id();
 
             $table->string('nik', 50)->unique('uq_part_nik');
-
-            // wajib diisi kalau NIK baru
             $table->string('name');
-
-            // rx00 - rx06
             $table->enum('plan', ['rx00','rx01','rx02','rx03','rx04','rx05','rx06']);
 
             $table->timestamps();
