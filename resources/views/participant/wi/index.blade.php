@@ -33,8 +33,6 @@
         </button>
       </form>
     </div>
-
-    {{-- Info Peserta Card --}}
     <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl shadow-lg mb-8 overflow-hidden">
       <div class="p-5">
         <div class="flex items-center justify-between mb-3">

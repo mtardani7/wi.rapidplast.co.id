@@ -25,10 +25,9 @@ class WiVideoAdminController extends Controller
             'description' => ['nullable', 'string'],
             'sort_order' => ['required', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
-            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn'],
+            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn,google_drive,onedrive'],
         ];
 
-        // Validasi berbeda berdasarkan source type
         if ($videoSourceType === 'upload') {
             $rules['video_file'] = ['required', 'file', 'mimes:mp4', 'max:512000'];
         } elseif ($videoSourceType === 'youtube') {
@@ -37,6 +36,10 @@ class WiVideoAdminController extends Controller
             $rules['video_url'] = ['required', 'url', 'regex:/vimeo\.com/'];
         } elseif ($videoSourceType === 'cdn') {
             $rules['video_url'] = ['required', 'url'];
+        } elseif ($videoSourceType === 'google_drive') {
+            $rules['video_url'] = ['required', 'url', 'regex:/drive\.google\.com|docs\.google\.com/'];
+        } elseif ($videoSourceType === 'onedrive') {
+            $rules['video_url'] = ['required', 'url', 'regex:/1drv\.ms|onedrive\.live\.com/'];
         }
 
         $request->validate($rules);
@@ -77,10 +80,9 @@ class WiVideoAdminController extends Controller
             'description' => ['nullable', 'string'],
             'sort_order' => ['required', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
-            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn'],
+            'video_source_type' => ['required', 'in:upload,youtube,vimeo,cdn,google_drive,onedrive'],
         ];
 
-        // Validasi berbeda berdasarkan source type
         if ($videoSourceType === 'upload') {
             $rules['video_file'] = ['nullable', 'file', 'mimes:mp4', 'max:512000'];
         } elseif ($videoSourceType === 'youtube') {
@@ -89,6 +91,10 @@ class WiVideoAdminController extends Controller
             $rules['video_url'] = ['required', 'url', 'regex:/vimeo\.com/'];
         } elseif ($videoSourceType === 'cdn') {
             $rules['video_url'] = ['required', 'url'];
+        } elseif ($videoSourceType === 'google_drive') {
+            $rules['video_url'] = ['required', 'url', 'regex:/drive\.google\.com|docs\.google\.com/'];
+        } elseif ($videoSourceType === 'onedrive') {
+            $rules['video_url'] = ['required', 'url', 'regex:/1drv\.ms|onedrive\.live\.com/'];
         }
 
         $request->validate($rules);

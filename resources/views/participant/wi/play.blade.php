@@ -6,12 +6,35 @@
   $scoreNow = (int)($progress->score ?? 0);
   $resumeTime = (int)($progress->last_time_seconds ?? 0);
   $isPassed = $scoreNow >= 70;
+
+  // Tambahan: ekstraktor Google Drive dan pembentuk embed OneDrive
+  function extractGoogleDriveIdFromUrl($url) {
+    if (!$url) return null;
+    if (preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $url, $m)) return $m[1];
+    if (preg_match('/id=([a-zA-Z0-9_-]+)/', $url, $m)) return $m[1];
+    return null;
+  }
+
+  function oneDriveEmbedUrl($url) {
+    if (!$url) return $url;
+    $parsed = parse_url($url);
+    if (!empty($parsed['query'])) {
+      parse_str($parsed['query'], $q);
+      if (!empty($q['resid'])) return 'https://onedrive.live.com/embed?resid=' . $q['resid'];
+      if (!empty($q['id'])) return 'https://onedrive.live.com/embed?resid=' . $q['id'];
+    }
+    if (preg_match('/resid=([^&]+)/', $url, $m)) return 'https://onedrive.live.com/embed?resid=' . $m[1];
+    return $url;
+  }
+
+  $gdId = extractGoogleDriveIdFromUrl($video->video_url);
+  $gdPreview = $gdId ? "https://drive.google.com/file/d/{$gdId}/preview" : null;
+  $oneDriveEmbed = oneDriveEmbedUrl($video->video_url);
 @endphp
 
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-primary-50 py-6 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
-    
-    {{-- Header --}}
+
     <div class="flex justify-between items-center mb-6">
       <div>
         <h5 class="mb-0 text-xl font-bold text-gray-900">{{ $video->title }}</h5>
@@ -24,7 +47,6 @@
       </a>
     </div>
 
-    {{-- Video --}}
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
       <div class="p-6">
         @if($video->video_source_type === 'youtube')
@@ -49,6 +71,28 @@
             allowfullscreen 
             class="rounded-lg"
           ></iframe>
+        @elseif(in_array($video->video_source_type, ['google_drive','googledrive','google-drive']))
+          <iframe
+            id="wiVideo"
+            width="100%"
+            height="500"
+            src="{{ $gdPreview ?? $video->video_url }}"
+            frameborder="0"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+            class="rounded-lg"
+          ></iframe>
+        @elseif(in_array($video->video_source_type, ['one_drive','onedrive','one-drive']))
+          <iframe
+            id="wiVideo"
+            width="100%"
+            height="500"
+            src="{{ $oneDriveEmbed ?? $video->video_url }}"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            class="rounded-lg"
+          ></iframe>
         @else
           <video 
             id="wiVideo" 
@@ -62,7 +106,6 @@
           </video>
         @endif
 
-        {{-- Score --}}
         <div class="mt-6">
           <div class="flex justify-between items-center mb-4">
             <div class="text-gray-600 text-sm">
@@ -106,11 +149,6 @@
 
   </div>
 </div>
-
-
-{{-- ========================= --}}
-{{-- MODAL QUIZ --}}
-{{-- ========================= --}}
 <div class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="quizModal">
   <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
     
@@ -158,29 +196,21 @@ document.addEventListener("DOMContentLoaded", async function () {
   const resumeTime = {{ $resumeTime }};
 
   let events = [];
-  let triggered = new Set(); // event id yang sudah muncul
+  let triggered = new Set();
   let activeEvent = null;
   let lastAttemptCorrect = null;
 
-  // ==========================
-  // RESUME PROGRESS
-  // ==========================
   video.addEventListener("loadedmetadata", function () {
     if (resumeTime > 0 && resumeTime < video.duration) {
       video.currentTime = resumeTime;
     }
   });
-
-  // ==========================
-  // LOAD EVENTS (QUIZ)
-  // ==========================
   async function loadEvents() {
     const res = await fetch("{{ route('wi.video.events', $video->id) }}", {
       headers: { "Accept": "application/json" }
     });
     events = await res.json();
 
-    // normalize options
     events = (events || []).map(e => {
       if (typeof e.options === "string") {
         try { e.options = JSON.parse(e.options); } catch (err) { e.options = []; }
@@ -192,9 +222,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await loadEvents();
 
-  // ==========================
-  // AUTO SAVE PROGRESS 5 detik
-  // ==========================
   setInterval(async () => {
     if (!video || video.paused || video.ended) return;
 
@@ -215,9 +242,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }, 5000);
 
-  // ==========================
-  // OPEN QUIZ MODAL
-  // ==========================
   function openQuiz(eventObj) {
     activeEvent = eventObj;
     lastAttemptCorrect = null;
@@ -308,8 +332,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   btnContinue.addEventListener("click", function () {
     quizModalEl.classList.add("hidden");
     document.body.style.overflow = "auto";
-
-    // kalau salah + ada rewind
     if (activeEvent && lastAttemptCorrect === false) {
       const rewindTo = activeEvent.rewind_to_seconds;
       if (rewindTo !== null && rewindTo !== undefined) {
@@ -322,8 +344,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     video.play();
   });
-
-  // Close modal on ESC key
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !quizModalEl.classList.contains("hidden")) {
       quizModalEl.classList.add("hidden");
@@ -331,12 +351,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       video.play();
     }
   });
-
-  // Check for quiz events
   setInterval(() => {
     if (video.paused || video.ended) return;
     if (!events || events.length === 0) return;
-    if (activeEvent) return; // sedang quiz
+    if (activeEvent) return; 
 
     const now = Math.floor(video.currentTime);
 
@@ -365,14 +383,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 </script>
 
 <style>
-  /* Smooth transitions */
   .transition-all {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
   }
 
-  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -387,7 +403,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     border-radius: 4px;
   }
 
-  /* Modal animation */
   .modal > div {
     animation: modalIn 0.3s ease-out;
   }
@@ -403,12 +418,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  /* Video styling */
   video {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
-  /* Progress bar animation */
   #scoreBar {
     transition: width 0.5s ease-in-out;
   }

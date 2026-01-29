@@ -54,6 +54,8 @@ class WiVideo extends Model
     {
         return match($this->video_source_type) {
             'youtube' => $this->getYoutubeEmbed(),
+            'google_drive' => $this->getGoogleDriveEmbed(),
+            'onedrive' => $this->getOneDriveEmbed(),
             'vimeo' => $this->getVimeoEmbed(),
             'cdn' => $this->getCdnEmbed(),
             'embed' => $this->embed_code ?? '',
@@ -95,6 +97,32 @@ class WiVideo extends Model
         );
     }
 
+    private function getGoogleDriveEmbed(): string
+    {
+        $id = $this->extractGoogleDriveId($this->video_url);
+        if ($id) {
+            $src = sprintf('https://drive.google.com/file/d/%s/preview', $id);
+        } else {
+            $src = $this->video_url;
+        }
+
+        return sprintf(
+            '<iframe id="wiVideo" width="100%%" height="500" src="%s" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>',
+            htmlspecialchars($src, ENT_QUOTES)
+        );
+    }
+
+    private function getOneDriveEmbed(): string
+    {
+        // For OneDrive, often the shared/embed URL is already an embeddable URL.
+        $src = $this->video_url;
+
+        return sprintf(
+            '<iframe id="wiVideo" width="100%%" height="500" src="%s" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>',
+            htmlspecialchars($src, ENT_QUOTES)
+        );
+    }
+
     public function extractYoutubeId(string $url): string
     {
         if (preg_match('/youtube\.com.*[?&]v=([^&]+)/', $url, $match)) {
@@ -113,8 +141,22 @@ class WiVideo extends Model
         }
         return '';
     }
+    public function extractGoogleDriveId(string $url): string
+    {
+        // Matches URLs like https://drive.google.com/file/d/FILEID/view?usp=sharing
+        if (preg_match('/drive\.google\.com\/file\/d\/([^\/]+)/', $url, $m)) {
+            return $m[1];
+        }
+        // Also match shareable link with id parameter
+        if (preg_match('/[?&]id=([^&]+)/', $url, $m)) {
+            return $m[1];
+        }
+        return '';
+    }
 
     public function isExternalVideo(): bool
     {
-        return in_array($this->video_source_type, ['youtube', 'vimeo', 'cdn', 'embed']);
-    }}
+        return in_array($this->video_source_type, ['youtube', 'vimeo', 'cdn', 'embed', 'google_drive', 'onedrive']);
+    }
+
+}

@@ -193,6 +193,14 @@
                                             <input type="radio" name="video_source_type" value="cdn" x-model="sourceType" class="text-red-600">
                                             <span class="ml-2 text-sm font-medium text-gray-700">CDN/Link</span>
                                         </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'google_drive' }">
+                                            <input type="radio" name="video_source_type" value="google_drive" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Google Drive</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300" :class="{ 'border-red-500 bg-red-50': sourceType === 'onedrive' }">
+                                            <input type="radio" name="video_source_type" value="onedrive" x-model="sourceType" class="text-red-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">OneDrive</span>
+                                        </label>
                                     </div>
 
                                     <div x-show="sourceType === 'upload'" class="space-y-2">
@@ -218,7 +226,18 @@
                                         <input type="url" name="video_url" placeholder="https://vimeo.com/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
                                         <p class="text-xs text-gray-500">Contoh: https://vimeo.com/123456789</p>
                                     </div>
+                                    
+                                    <div x-show="sourceType === 'google_drive'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Google Drive URL</label>
+                                        <input type="url" name="video_url" placeholder="https://drive.google.com/file/d/FILEID/view?usp=sharing" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://drive.google.com/file/d/FILEID/view?usp=sharing</p>
+                                    </div>
 
+                                    <div x-show="sourceType === 'onedrive'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">OneDrive URL</label>
+                                        <input type="url" name="video_url" placeholder="https://1drv.ms/v/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://1drv.ms/v/ atau link embed OneDrive</p>
+                                    </div>
                                     <div x-show="sourceType === 'cdn'" class="space-y-2">
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">CDN atau Link Video</label>
                                         <input type="url" name="video_url" placeholder="https://cdn.example.com/video.mp4" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-200">
@@ -292,6 +311,14 @@
                                             <input type="radio" name="video_source_type" value="cdn" x-model="sourceType" class="text-yellow-600">
                                             <span class="ml-2 text-sm font-medium text-gray-700">CDN/Link</span>
                                         </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'google_drive' }">
+                                            <input type="radio" name="video_source_type" value="google_drive" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Google Drive</span>
+                                        </label>
+                                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-300" :class="{ 'border-yellow-500 bg-yellow-50': sourceType === 'onedrive' }">
+                                            <input type="radio" name="video_source_type" value="onedrive" x-model="sourceType" class="text-yellow-600">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">OneDrive</span>
+                                        </label>
                                     </div>
 
                                     <div x-show="sourceType === 'upload'" class="space-y-2">
@@ -316,6 +343,18 @@
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">Vimeo URL</label>
                                         <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://vimeo.com/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
                                         <p class="text-xs text-gray-500">Contoh: https://vimeo.com/123456789</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'google_drive'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Google Drive URL</label>
+                                        <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://drive.google.com/file/d/FILEID/view?usp=sharing" class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://drive.google.com/file/d/FILEID/view?usp=sharing</p>
+                                    </div>
+
+                                    <div x-show="sourceType === 'onedrive'" class="space-y-2">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">OneDrive URL</label>
+                                        <input type="url" name="video_url" x-model="editForm.video_url" placeholder="https://1drv.ms/v/..." class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-200">
+                                        <p class="text-xs text-gray-500">Contoh: https://1drv.ms/v/ atau link embed OneDrive</p>
                                     </div>
 
                                     <div x-show="sourceType === 'cdn'" class="space-y-2">
