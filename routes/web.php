@@ -24,6 +24,11 @@ Route::middleware(['participant'])->group(function () {
     Route::post('/wi/video/{video}/events/{event}/attempt',[ParticipantVideoController::class, 'submitAttempt'])->name('wi.video.events.attempt');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/videos/player', [WiVideoAdminController::class, 'player'])
+        ->name('admin.wi.videos.player');
+});
+
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {return redirect()->route('admin.wi.index');})->name('dashboard');
     Route::get('/wi', [WorkInstructionAdminController::class, 'index'])->name('wi.index');
@@ -33,14 +38,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/results', [ResultAdminController::class, 'index'])->name('results.index');
     Route::get('/results/{participant}', [ResultAdminController::class, 'show'])->name('results.show');
 
-Route::prefix('wi/{wi}')->scopeBindings()->group(function () {
-    Route::get('/videos', [WiVideoAdminController::class, 'index'])->name('wi.videos.index');
-    Route::post('/videos', [WiVideoAdminController::class, 'store'])->name('wi.videos.store');
-    Route::put('/videos/{video}', [WiVideoAdminController::class, 'update'])->name('wi.videos.update');
-    Route::delete('/videos/{video}', [WiVideoAdminController::class, 'destroy'])->name('wi.videos.destroy');
-    Route::get('/videos/{video}/events', [WiVideoEventAdminController::class, 'index'])->name('wi.videos.events.index');
-    Route::post('/videos/{video}/events', [WiVideoEventAdminController::class, 'store'])->name('wi.videos.events.store');
-    Route::put('/videos/{video}/events/{event}', [WiVideoEventAdminController::class, 'update'])->name('wi.videos.events.update');
-    Route::delete('/videos/{video}/events/{event}', [WiVideoEventAdminController::class, 'destroy'])->name('wi.videos.events.destroy');
+    Route::prefix('wi/{wi}')->scopeBindings()->group(function () {
+        Route::get('/videos', [WiVideoAdminController::class, 'index'])->name('wi.videos.index');
+        Route::post('/videos', [WiVideoAdminController::class, 'store'])->name('wi.videos.store');
+        Route::put('/videos/{video}', [WiVideoAdminController::class, 'update'])->name('wi.videos.update');
+        Route::delete('/videos/{video}', [WiVideoAdminController::class, 'destroy'])->name('wi.videos.destroy');
+        Route::get('/videos/{video}/events', [WiVideoEventAdminController::class, 'index'])->name('wi.videos.events.index');
+        Route::post('/videos/{video}/events', [WiVideoEventAdminController::class, 'store'])->name('wi.videos.events.store');
+        Route::put('/videos/{video}/events/{event}', [WiVideoEventAdminController::class, 'update'])->name('wi.videos.events.update');
+        Route::delete('/videos/{video}/events/{event}', [WiVideoEventAdminController::class, 'destroy'])->name('wi.videos.events.destroy');
     });
 });

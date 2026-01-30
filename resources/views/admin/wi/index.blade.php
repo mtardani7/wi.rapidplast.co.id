@@ -52,7 +52,6 @@
     </div>
     <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden relative">
         <div class="h-1.5 w-full bg-gradient-to-r from-red-500 via-red-600 to-red-800"></div>
-
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-100">
                 <thead>

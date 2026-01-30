@@ -141,4 +141,20 @@ class WiVideoAdminController extends Controller
 
         return back()->with('success', 'Video berhasil dihapus.');
     }
+
+    public function player(Request $request)
+    {
+        if (!auth()->check()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $videoUrl = $request->query('url');
+        $videoType = $request->query('type', 'upload');
+
+        if (!$videoUrl) {
+            abort(404, 'Video not found');
+        }
+
+        return view('admin.wi_videos.player', compact('videoUrl', 'videoType'));
+    }
 }
