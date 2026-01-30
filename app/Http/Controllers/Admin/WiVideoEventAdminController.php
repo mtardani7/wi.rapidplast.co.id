@@ -10,9 +10,24 @@ use Illuminate\Http\Request;
 
 class WiVideoEventAdminController extends Controller
 {
+    protected function getVideo(WorkInstruction $wi, $videoId): WiVideo
+    {
+        return WiVideo::where('id', $videoId)
+            ->where('work_instruction_id', $wi->id)
+            ->firstOrFail();
+    }
+
+    protected function getEvent(WiVideo $video, $eventId): WiVideoEvent
+    {
+        return WiVideoEvent::where('id', $eventId)
+            ->where('wi_video_id', $video->id)
+            ->firstOrFail();
+    }
+
     public function index(WorkInstruction $wi, WiVideo $video)
     {
-        abort_if($video->work_instruction_id !== $wi->id, 404);
+        // pastikan video benar-benar milik WI
+        $video = $this->getVideo($wi, $video->id);
 
         $events = WiVideoEvent::where('wi_video_id', $video->id)
             ->orderBy('time_seconds')
@@ -23,9 +38,9 @@ class WiVideoEventAdminController extends Controller
 
     public function store(Request $request, WorkInstruction $wi, WiVideo $video)
     {
-        abort_if($video->work_instruction_id !== $wi->id, 404);
+        $video = $this->getVideo($wi, $video->id);
 
-        $request->validate([
+        $validated = $request->validate([
             'minute' => ['required', 'integer', 'min:0'],
             'second' => ['required', 'integer', 'min:0', 'max:59'],
 
@@ -43,26 +58,31 @@ class WiVideoEventAdminController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        $timeSeconds = ((int)$request->minute * 60) + (int)$request->second;
+        $timeSeconds = ($validated['minute'] * 60) + $validated['second'];
 
         $rewindSeconds = null;
-        if ($request->filled('rewind_minute') || $request->filled('rewind_second')) {
-            $rewindSeconds = ((int)($request->rewind_minute ?? 0) * 60) + (int)($request->rewind_second ?? 0);
+        if (
+            isset($validated['rewind_minute']) ||
+            isset($validated['rewind_second'])
+        ) {
+            $rewindSeconds =
+                ((int)($validated['rewind_minute'] ?? 0) * 60)
+                + ((int)($validated['rewind_second'] ?? 0));
         }
 
         WiVideoEvent::create([
             'wi_video_id' => $video->id,
             'time_seconds' => $timeSeconds,
             'type' => 'quiz',
-            'question' => $request->question,
+            'question' => $validated['question'],
             'options' => [
-                $request->option_a,
-                $request->option_b,
-                $request->option_c,
-                $request->option_d,
+                $validated['option_a'],
+                $validated['option_b'],
+                $validated['option_c'],
+                $validated['option_d'],
             ],
-            'correct_index' => (int)$request->correct_index,
-            'explanation' => $request->explanation,
+            'correct_index' => (int) $validated['correct_index'],
+            'explanation' => $validated['explanation'] ?? null,
             'is_required' => $request->boolean('is_required'),
             'rewind_to_seconds' => $rewindSeconds,
             'is_active' => $request->boolean('is_active'),
@@ -73,10 +93,10 @@ class WiVideoEventAdminController extends Controller
 
     public function update(Request $request, WorkInstruction $wi, WiVideo $video, WiVideoEvent $event)
     {
-        abort_if($video->work_instruction_id !== $wi->id, 404);
-        abort_if($event->wi_video_id !== $video->id, 404);
+        $video = $this->getVideo($wi, $video->id);
+        $event = $this->getEvent($video, $event->id);
 
-        $request->validate([
+        $validated = $request->validate([
             'minute' => ['required', 'integer', 'min:0'],
             'second' => ['required', 'integer', 'min:0', 'max:59'],
             'question' => ['required', 'string', 'max:255'],
@@ -92,24 +112,29 @@ class WiVideoEventAdminController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        $timeSeconds = ((int)$request->minute * 60) + (int)$request->second;
+        $timeSeconds = ($validated['minute'] * 60) + $validated['second'];
 
         $rewindSeconds = null;
-        if ($request->filled('rewind_minute') || $request->filled('rewind_second')) {
-            $rewindSeconds = ((int)($request->rewind_minute ?? 0) * 60) + (int)($request->rewind_second ?? 0);
+        if (
+            isset($validated['rewind_minute']) ||
+            isset($validated['rewind_second'])
+        ) {
+            $rewindSeconds =
+                ((int)($validated['rewind_minute'] ?? 0) * 60)
+                + ((int)($validated['rewind_second'] ?? 0));
         }
 
         $event->update([
             'time_seconds' => $timeSeconds,
-            'question' => $request->question,
+            'question' => $validated['question'],
             'options' => [
-                $request->option_a,
-                $request->option_b,
-                $request->option_c,
-                $request->option_d,
+                $validated['option_a'],
+                $validated['option_b'],
+                $validated['option_c'],
+                $validated['option_d'],
             ],
-            'correct_index' => (int)$request->correct_index,
-            'explanation' => $request->explanation,
+            'correct_index' => (int) $validated['correct_index'],
+            'explanation' => $validated['explanation'] ?? null,
             'is_required' => $request->boolean('is_required'),
             'rewind_to_seconds' => $rewindSeconds,
             'is_active' => $request->boolean('is_active'),
@@ -120,8 +145,8 @@ class WiVideoEventAdminController extends Controller
 
     public function destroy(WorkInstruction $wi, WiVideo $video, WiVideoEvent $event)
     {
-        abort_if($video->work_instruction_id !== $wi->id, 404);
-        abort_if($event->wi_video_id !== $video->id, 404);
+        $video = $this->getVideo($wi, $video->id);
+        $event = $this->getEvent($video, $event->id);
 
         $event->delete();
 
