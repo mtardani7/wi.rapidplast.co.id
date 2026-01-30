@@ -268,7 +268,6 @@
             <div class="fixed inset-0 z-10 overflow-y-auto">
                 <div class="flex min-h-full items-center justify-center p-4">
                     <div x-show="editModalOpen" @click.away="editModalOpen = false" x-transition class="relative w-full max-w-lg transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl">
-                        {{-- Form Edit (Multipart) --}}
                         <form method="POST" :action="editForm.action" enctype="multipart/form-data">
                             @csrf @method('PUT')
                             <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-6 py-4 border-b border-yellow-400">

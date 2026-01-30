@@ -47,9 +47,6 @@ class WiVideo extends Model
             ->orderBy('time_seconds');
     }
 
-    /**
-     * Generate video embed HTML based on source type
-     */
     public function getEmbedHtml(): string
     {
         return match($this->video_source_type) {
@@ -114,7 +111,6 @@ class WiVideo extends Model
 
     private function getOneDriveEmbed(): string
     {
-        // For OneDrive, often the shared/embed URL is already an embeddable URL.
         $src = $this->video_url;
 
         return sprintf(
@@ -143,11 +139,9 @@ class WiVideo extends Model
     }
     public function extractGoogleDriveId(string $url): string
     {
-        // Matches URLs like https://drive.google.com/file/d/FILEID/view?usp=sharing
         if (preg_match('/drive\.google\.com\/file\/d\/([^\/]+)/', $url, $m)) {
             return $m[1];
         }
-        // Also match shareable link with id parameter
         if (preg_match('/[?&]id=([^&]+)/', $url, $m)) {
             return $m[1];
         }

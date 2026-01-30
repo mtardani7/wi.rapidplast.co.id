@@ -152,11 +152,6 @@
                     loginSpinner.classList.remove('hidden');
                     loginButton.classList.remove('hover:-translate-y-0.5');
                     loginButton.classList.add('opacity-90', 'cursor-not-allowed');
-                    
-                    // Simulasi delay untuk menunjukkan loader (opsional)
-                    // setTimeout(() => {
-                    //     loginForm.submit();
-                    // }, 1000);
                 }
             });
         }

@@ -107,7 +107,6 @@ class WiVideoAdminController extends Controller
 
         if ($videoSourceType === 'upload') {
             if ($request->hasFile('video_file')) {
-                // Hapus file lama jika ada
                 if ($video->video_url && str_contains($video->video_url, '/storage/')) {
                     $relative = str_replace(asset('storage') . '/', '', $video->video_url);
                     Storage::disk('public')->delete($relative);
@@ -117,9 +116,7 @@ class WiVideoAdminController extends Controller
                 $video->video_url = asset('storage/' . $path);
             }
         } else {
-            // Untuk external video (youtube, vimeo, cdn)
             $video->video_url = $request->input('video_url');
-            // Hapus file upload lama jika ada
             if ($video->video_url && str_contains($video->video_url, '/storage/')) {
                 $relative = str_replace(asset('storage') . '/', '', $video->video_url);
                 Storage::disk('public')->delete($relative);

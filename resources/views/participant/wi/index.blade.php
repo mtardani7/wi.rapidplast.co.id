@@ -4,8 +4,6 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-primary-50 py-6 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
-    
-    {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
@@ -91,8 +89,6 @@
         </div>
       </div>
     </div>
-
-    {{-- Header List WI --}}
     <div class="flex items-center justify-between mb-6">
       <div>
         <h2 class="text-xl font-bold text-gray-800">Available Materials</h2>
@@ -102,8 +98,6 @@
         Total: <span class="font-bold text-primary-700">{{ count($wis) }} Work Instruction</span>
       </div>
     </div>
-
-    {{-- List WI --}}
     @if(count($wis) > 0)
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($wis as $wi)
@@ -120,13 +114,11 @@
 
             $percent = $totalVideo > 0 ? round(($completedCount / $totalVideo) * 100) : 0;
             
-            // Warna progress bar berdasarkan persentase
             $progressColor = $percent == 100 ? 'bg-green-500' : 
                             ($percent >= 50 ? 'bg-yellow-500' : 'bg-primary-500');
           @endphp
 
           <div class="group bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 transform hover:-translate-y-1">
-            {{-- Card Header --}}
             <div class="p-5 border-b border-gray-100">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex-1">
@@ -148,8 +140,6 @@
                   </p>
                 </div>
               </div>
-
-              {{-- Tags --}}
               <div class="flex flex-wrap gap-2 mt-3">
                 <span class="px-2 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full">
                   <i class="fas fa-video mr-1"></i> {{ $totalVideo }} Video
@@ -159,8 +149,6 @@
                 </span>
               </div>
             </div>
-
-            {{-- Progress Section --}}
             <div class="p-5 border-b border-gray-100">
               <div class="flex justify-between items-center mb-2">
                 <span class="text-sm font-medium text-gray-700">Progress Pembelajaran</span>
@@ -187,8 +175,6 @@
                 </span>
               </div>
             </div>
-
-            {{-- Action Button --}}
             <div class="p-5">
               @if($firstVideo)
                 <a href="{{ route('wi.video.play', $firstVideo->id) }}"
@@ -213,7 +199,6 @@
         @endforeach
       </div>
     @else
-      {{-- Empty State --}}
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
         <div class="max-w-md mx-auto">
           <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center mb-6">
@@ -232,8 +217,6 @@
         </div>
       </div>
     @endif
-
-    {{-- Stats Footer --}}
     <div class="mt-10 pt-6 border-t border-gray-200">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
@@ -284,7 +267,6 @@
 </div>
 
 <style>
-  /* Custom styles */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -301,19 +283,16 @@
     background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
   }
   
-  /* Smooth transitions */
   .transition-all {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
   }
-  
-  /* Card hover effects */
+
   .group:hover .group-hover\:text-primary-700 {
     color: #b91c1c;
   }
   
-  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -336,7 +315,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Animasi saat card muncul
     const cards = document.querySelectorAll('.group.bg-white');
     cards.forEach((card, index) => {
       card.style.opacity = '0';
@@ -349,7 +327,6 @@
       }, 100 + (index * 100));
     });
     
-    // Efek hover pada progress bar
     const progressBars = document.querySelectorAll('.h-2\\.5.rounded-full');
     progressBars.forEach(bar => {
       bar.addEventListener('mouseenter', function() {
@@ -362,7 +339,6 @@
       });
     });
     
-    // Tambahkan tooltip untuk persentase
     const progressTexts = document.querySelectorAll('.text-sm.font-bold');
     progressTexts.forEach(text => {
       text.title = 'Persentase penyelesaian materi';

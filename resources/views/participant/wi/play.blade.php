@@ -7,7 +7,6 @@
   $resumeTime = (int)($progress->last_time_seconds ?? 0);
   $isPassed = $scoreNow >= 70;
 
-  // Tambahan: ekstraktor Google Drive dan pembentuk embed OneDrive
   function extractGoogleDriveIdFromUrl($url) {
     if (!$url) return null;
     if (preg_match('/\/d\/([a-zA-Z0-9_-]+)/', $url, $m)) return $m[1];
