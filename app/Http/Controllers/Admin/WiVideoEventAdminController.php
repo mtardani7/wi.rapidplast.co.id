@@ -26,7 +26,6 @@ class WiVideoEventAdminController extends Controller
 
     public function index(WorkInstruction $wi, WiVideo $video)
     {
-        // pastikan video benar-benar milik WI
         $video = $this->getVideo($wi, $video->id);
 
         $events = WiVideoEvent::where('wi_video_id', $video->id)
