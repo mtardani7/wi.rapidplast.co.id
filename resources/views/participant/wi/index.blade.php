@@ -17,19 +17,6 @@
           <span class="text-xs text-gray-500 font-medium">Live - PT. Rapid Plast Indonesia</span>
         </div>
       </div>
-
-      <form method="POST" action="{{ route('participant.logout') }}">
-        @csrf
-        <button type="submit" 
-                class="group relative flex items-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0">
-          <i class="fas fa-exchange-alt text-sm"></i>
-          <span>Ganti NIK</span>
-          <span class="absolute -top-1 -right-1">
-            <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-          </span>
-        </button>
-      </form>
     </div>
     <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl shadow-lg mb-8 overflow-hidden">
       <div class="p-5">
@@ -156,12 +143,9 @@
                   {{ $percent }}%
                 </span>
               </div>
-              
               <div class="w-full bg-gray-200 rounded-full h-2.5">
-                <div class="h-2.5 rounded-full {{ $progressColor }} transition-all duration-500" 
-                     style="width: {{ $percent }}%"></div>
+                <div class="h-2.5 rounded-full {{ $progressColor }} transition-all duration-500" style="width: {{ $percent }}%"></div>
               </div>
-              
               <div class="flex justify-between mt-2">
                 <span class="text-xs text-gray-500">{{ $completedCount }} dari {{ $totalVideo }} video</span>
                 <span class="text-xs font-medium {{ $percent == 100 ? 'text-green-600' : 'text-gray-600' }}">
@@ -217,55 +201,8 @@
         </div>
       </div>
     @endif
-    <div class="mt-10 pt-6 border-t border-gray-200">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg bg-primary-50 flex items-center justify-center">
-              <i class="fas fa-book-open text-primary-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-500">Total Dipelajari</p>
-              <p class="text-2xl font-bold text-gray-900">
-                {{ $completedCountTotal ?? 0 }} <span class="text-lg text-gray-500">video</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
-              <i class="fas fa-check-circle text-green-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-500">WI Terselesaikan</p>
-              <p class="text-2xl font-bold text-gray-900">
-                {{ $completedWI ?? 0 }} <span class="text-lg text-gray-500">dari {{ count($wis) }}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
-              <i class="fas fa-clock text-blue-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-500">Rata-rata Waktu</p>
-              <p class="text-2xl font-bold text-gray-900">
-                15 <span class="text-lg text-gray-500">menit/wi</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
-
 <style>
   .line-clamp-2 {
     display: -webkit-box;

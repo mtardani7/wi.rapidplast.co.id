@@ -5,24 +5,7 @@
   <div class="w-full max-w-lg">
     <div class="text-center mb-8">
       <div class="flex justify-center mb-4">
-        <div class="relative">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-primary-600 to-primary-800 flex items-center justify-center shadow-lg">
-            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19.5 5.5v13c0 .8-.7 1.5-1.5 1.5H6c-.8 0-1.5-.7-1.5-1.5v-13c0-.8.7-1.5 1.5-1.5h12c.8 0 1.5.7 1.5 1.5zm-15 0v13c0 .3.2.5.5.5h12c.3 0 .5-.2.5-.5v-13c0-.3-.2-.5-.5-.5H6c-.3 0-.5.2-.5.5zm3 2h9v9h-9v-9z"/>
-            </svg>
-          </div>
-          <div class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full border-2 border-white flex items-center justify-center">
-            <span class="text-[10px] font-bold text-gray-800">R</span>
-          </div>
-        </div>
       </div>
-      
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">
-        PT. Rapid Plast Indonesia
-      </h2>
-      <p class="mt-1 text-sm text-gray-600">
-        Registrasi Peserta Work Instruction
-      </p>
     </div>
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
       <div class="bg-gradient-to-r from-primary-600 to-primary-800 py-5 px-6">
@@ -195,32 +178,7 @@
             </a>
           </div>
         </form>
-        <div class="mt-8 pt-6 border-t border-gray-100">
-          <div class="text-center">
-            <div class="flex items-center justify-center space-x-2 text-gray-500 mb-2">
-              <i class="fas fa-lock text-primary-500"></i>
-              <span class="text-xs font-medium">Data Aman & Terenkripsi</span>
-            </div>
-            <p class="text-xs text-gray-400">
-              Informasi yang Anda berikan dilindungi oleh kebijakan privasi perusahaan.
-            </p>
-            <div class="mt-3 flex items-center justify-center space-x-2">
-              <div class="text-xs text-gray-500">
-                <i class="far fa-clock mr-1"></i>
-                Registrasi hanya membutuhkan waktu 1-2 menit
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-    <div class="mt-6 text-center">
-      <p class="text-xs text-gray-400">
-        Pastikan data yang Anda isi sudah benar sebelum melanjutkan.
-      </p>
-      <p class="text-xs text-gray-400 mt-1">
-        &copy; {{ date('Y') }} PT. Rapid Plast Indonesia. Sistem Work Instruction v2.1
-      </p>
     </div>
   </div>
 </div>

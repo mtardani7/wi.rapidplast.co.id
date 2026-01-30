@@ -8,12 +8,6 @@
         <div class="relative">
         </div>
       </div>
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">
-        PT. Rapid Plast Indonesia
-      </h2>
-      <p class="mt-2 text-sm text-gray-600">
-        Work Instruction System
-      </p>
     </div>
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transform transition-all duration-300 hover:shadow-2xl">
       <div class="bg-gradient-to-r from-primary-600 to-primary-800 py-5 px-6">
@@ -23,7 +17,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-white">Masuk Work Instruction</h3>
-            <p class="text-primary-100 text-sm">Mode Participant</p>
+            <p class="text-primary-100 text-sm">Participant</p>
           </div>
         </div>
       </div>
@@ -119,44 +113,14 @@
             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-200 ml-1"></i>
           </button>
         </form>
-
-        <div class="mt-6 pt-5 border-t border-gray-100">
-          <div class="text-center">
-            <div class="flex items-center justify-center space-x-2 text-gray-500 mb-2">
-              <i class="fas fa-shield-alt text-primary-500"></i>
-              <span class="text-xs font-medium">Keamanan Terjamin</span>
-            </div>
-            <p class="text-xs text-gray-400">
-              Data NIK Anda aman dan hanya digunakan untuk keperluan pembelajaran internal perusahaan.
-            </p>
-            <div class="mt-3 flex items-center justify-center space-x-3">
-              <div class="flex items-center space-x-1">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-xs text-gray-500">System Active</span>
-              </div>
-              <div class="w-px h-4 bg-gray-300"></div>
-              <div class="text-xs text-gray-500">
-                {{ date('d M Y, H:i') }}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
     <div class="mt-6 text-center">
-      <div class="inline-flex items-center space-x-1 px-4 py-2 bg-white rounded-lg border border-gray-200 shadow-sm">
-        <i class="fas fa-headset text-primary-600"></i>
-        <span class="text-sm text-gray-600">Butuh bantuan?</span>
-        <a href="#" class="text-sm font-medium text-primary-700 hover:text-primary-800 ml-1">
-          Hubungi IT Support
-        </a>
-      </div>
       <p class="text-xs text-gray-400 mt-4">
         &copy; {{ date('Y') }} PT. Rapid Plast Indonesia. All rights reserved.
       </p>
     </div>
-
   </div>
 </div>
 

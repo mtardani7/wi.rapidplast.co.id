@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ParticipantAuthController extends Controller
 {
+
     public function showNikForm()
     {
         return view('participant.nik');
@@ -21,11 +22,12 @@ class ParticipantAuthController extends Controller
         $nik = trim($request->nik);
 
         $participant = Participant::where('nik', $nik)->first();
-
         if ($participant) {
             session([
-                'participant_id' => $participant->id,
-                'participant_nik' => $participant->nik,
+                'participant_id'   => $participant->id,
+                'participant_nik'  => $participant->nik,
+                'participant_name' => $participant->name, // ✅ FIX
+                'participant_plan' => $participant->plan, // ✅ FIX
             ]);
 
             return redirect()->route('wi.index');
@@ -47,7 +49,7 @@ class ParticipantAuthController extends Controller
         $plans = ['rx00','rx01','rx02','rx03','rx04','rx05','rx06'];
 
         return view('participant.register', [
-            'nik' => session('pending_nik'),
+            'nik'   => session('pending_nik'),
             'plans' => $plans,
         ]);
     }
@@ -66,7 +68,6 @@ class ParticipantAuthController extends Controller
         ]);
 
         $nik = session('pending_nik');
-
         $participant = Participant::firstOrCreate(
             ['nik' => $nik],
             [
@@ -74,16 +75,18 @@ class ParticipantAuthController extends Controller
                 'plan' => $request->plan,
             ]
         );
-
         if (!$participant->name) {
-            $participant->name = $request->name;
-            $participant->plan = $request->plan;
-            $participant->save();
+            $participant->update([
+                'name' => $request->name,
+                'plan' => $request->plan,
+            ]);
         }
         session()->forget('pending_nik');
         session([
-            'participant_id' => $participant->id,
-            'participant_nik' => $participant->nik,
+            'participant_id'   => $participant->id,
+            'participant_nik'  => $participant->nik,
+            'participant_name' => $participant->name, // ✅ FIX
+            'participant_plan' => $participant->plan, // ✅ FIX
         ]);
 
         return redirect()->route('wi.index');
@@ -94,6 +97,8 @@ class ParticipantAuthController extends Controller
         $request->session()->forget([
             'participant_id',
             'participant_nik',
+            'participant_name',
+            'participant_plan',
             'pending_nik',
         ]);
 

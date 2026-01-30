@@ -108,8 +108,8 @@
             <form method="POST" action="{{ route('participant.logout') }}" class="m-0">
               @csrf
               <button type="submit" class="relative flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 group">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Ganti NIK</span>
+                <i class="fas fa-power-off"></i>
+                <span>Logout</span>
                 <span class="absolute -top-1 -right-1">
                   <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
@@ -141,10 +141,9 @@
             
             <form method="POST" action="{{ route('participant.logout') }}" class="w-full">
               @csrf
-              <button type="submit" 
-                      class="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Ganti NIK</span>
+              <button type="submit" class="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow">\
+                <i class="fas fa-power-off"></i>
+                <span>Logout</span>
               </button>
             </form>
           </div>
